@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block main %}
+
+<h1>PERSONLOVE &#4326</h1>
+<br>
+
+{% if user.is_authenticated %}
+<a href="{% url 'main' %}">Lets find somebody for you!</a>
+
+    <h2>{{useraccount.user.username}}</h2>
+
+    <p>Name:    {{useraccount.first_name}} {{useraccount.last_name}}</p>
+    <p>Age:     {{useraccount.age}}</p>
+    <p>Sex:     {{useraccount.sex}}</p>
+    <p>Email:   {{useraccount.user.email}}</p>
+    <img src='{{ useraccount.image.url }}'>
+
+{% endif %}
+
+{% endblock %}

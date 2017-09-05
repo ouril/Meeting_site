@@ -6,13 +6,28 @@
 
 <h1>PERSONLOVE &#4326</h1>
 <br>
-
+{% csrf_token %}
     <form action="{% url 'registration' %}" method="post">
-
         {% csrf_token %}
-
-        {{ form.as_table }}
-
+    <table>
+    {% for field in form %}
+        <tr>
+            <td>
+                {{ field.label_tag }}
+            </td>
+            <td>
+                <div>
+                    <ul>
+                        {% for error in field.errors %}
+                            <li>errors:{{ error }}</li>
+                        {% endfor %}
+                        {{ field }}
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
         <input type="submit" value="CREATE ACCOUNT" />
     </form>
 

@@ -8,19 +8,17 @@
 <br>
 
 {% if user.is_authenticated %}
+<a href="{% url 'main' %}">Lets find somebody for you!</a>
+<hr>
+{% for ac in account_list %}
+<p>
+    <a href="{% url 'detail' ac.id%}">{{ac.first_name}} {{ac.last_name}}</a>
+    {{ac.age}}
+    {{ac.sex}}
 
-    <h2>Hello {{user.username}}!</h2>
-    <br>
-    <a href="{% url 'main' %}">Lets find somebody for you!</a>
-
-    {% for ac in account_list %}
-
-        <a href="{% url 'user_detail' ac.id %}">{{ac.first_name}} {{ac.last_name}}</a>
-        <p>     {{ac.birth_date}}</p>
-        <p>     {{ac.sex}}</p>
-
-    {% endfor %}
-`
+</p>
+<hr>
+{% endfor %}
 {% endif %}
 
 {% endblock %}

@@ -1,10 +1,13 @@
 from django.contrib import auth
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import (
     render,
     HttpResponseRedirect
 )
+from django.views.generic.detail import DetailView
 
+from .models import UserAccount
 from .forms import (
     RegForm,
     AccountForm,
@@ -31,7 +34,7 @@ def login(request):
 
 def logout(request):
     auth.logout(request)
-    return HttpResponseRedirect('/products')
+    return HttpResponseRedirect('/')
 
 
 def registration(request):
@@ -39,14 +42,14 @@ def registration(request):
         form = RegForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/account')
+            return HttpResponseRedirect('/make_account')
         return render(request, 'registration.html', {'form': form})
     return render(request, 'registration.html', {'form': RegForm()})
 
 
 def make_account(request):
     if request.method == 'POST':
-        form = AccauntForm(request.POST)
+        form = AccountForm(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/')
@@ -56,3 +59,32 @@ def make_account(request):
 
 def find_somebody(request):
     return render(request, 'index.html', {'form': FindForm()})
+
+
+def filter(request):
+    try:
+        sex = request.POST.get('sex')
+    except:
+        sex = None
+    try:
+        age = request.POST.get('age')
+    except:
+        age = None
+    if sex or age:
+        context = UserAccount.objects.filter(
+            Q(sex=sex)|
+            Q(age=age)
+        ).distinct()
+    elif sex and age:
+        context = UserAccount.objects.filter(
+            Q(sex=sex)&
+            Q(age=age)
+        ).distinct()
+    else:
+        context = UserAccount.objects.all()
+    return render(request, 'filter.html', {'account_list': context})
+
+
+class UserAccountDetailView(DetailView):
+    template_name = "detail.html"
+    model = UserAccount

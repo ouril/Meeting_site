@@ -27,30 +27,20 @@
 
 {% else %}
 
+    <a href="{% url 'logout' %}">Quit</a>
     <h2>Hello {{user.username}}!</h2>
-    <br>
     <p>Lets find somebody for you!</p>
-<!--
     <form action="{% url 'filter' %}"  method='POST'>
-        <input max='35' name='first_name' placeholder='first_name' type='text' value=''>
-        <input max='35' name='last_name' placeholder='last_name' type='text' value=''>
-        <input max='35' name='sex' placeholder='sex' type='radio' list="sex">
-        <datalist id="sex">
-            <option value="male">
-            <option value="female">
-            </datalist>
-        <input name='age' placeholder='age' type='numbertext' value=''>
-        <br>
-      <button type='submit'>Find!</button>
-    </form>
--->
-    <form action="{% url 'filter' %}" method="post">
 
-        {% csrf_token %}
+     {% csrf_token %}
 
-        {{ form.as_p }}
+        <p>
+            <input type="radio" name="male" value="male"> male
+            <input type="radio" name="female" value="female">female
+            <input name='age' placeholder='age' type='numbertext' value=''>
+        </p>
 
-        <input type="submit" value="FIND!" />
+        <button type='submit'>Find!</button>
     </form>
 
 {% endif %}

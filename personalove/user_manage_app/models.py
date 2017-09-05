@@ -1,7 +1,10 @@
+import uuid
 from datetime import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
+
+from django.conf import settings
 
 
 def make_upload_path(instance, filename, prefix=False):
@@ -11,16 +14,21 @@ def make_upload_path(instance, filename, prefix=False):
     parts = filename.split('.')
     index = parts[-1]
     filename = new_name + '.' + index
-    return "{0}/{1}".format(settings.MEDIA_ROOT, filename)
+    return filename
 
 
 class UserAccount(models.Model):
-    SEX = 'male', 'female'
+    MALE = 'male'
+    FEMALE = 'female'
+    SEX = [
+        (MALE, 'male'),
+        (FEMALE, 'female')
+    ]
     user = models.OneToOneField(
         User,
         related_name='user'
     )
-    created = models.DataTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(
         max_length=190,
         verbose_name='first_name'
@@ -32,19 +40,15 @@ class UserAccount(models.Model):
     sex = models.CharField(
         max_length=6,
         choices=SEX,
-        defauslt='male'
+        default='male'
     )
-    birth_date = models.DataTimeField()
+    age = models.PositiveIntegerField()
     image = models.ImageField(
         upload_to=make_upload_path,
         default='',
         blank=True
     )
 
-    def _str_(self):
+    def __str__(self):
         return self.first_name + ' ' + self.last_name
 
-    @property
-    def age(self):
-        now = datetime.today()
-        return now.year - self.birth_date.year
