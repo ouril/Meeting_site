@@ -4,7 +4,17 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class UserAccaunt(models.Model):
+def make_upload_path(instance, filename, prefix=False):
+    """Create unqiue name for Image
+    """
+    new_name = str(uuid.uuid1())
+    parts = filename.split('.')
+    index = parts[-1]
+    filename = new_name + '.' + index
+    return "{0}/{1}".format(settings.MEDIA_ROOT, filename)
+
+
+class UserAccount(models.Model):
     SEX = 'male', 'female'
     user = models.OneToOneField(
         User,
@@ -25,6 +35,11 @@ class UserAccaunt(models.Model):
         defauslt='male'
     )
     birth_date = models.DataTimeField()
+    image = models.ImageField(
+        upload_to=make_upload_path,
+        default='',
+        blank=True
+    )
 
     def _str_(self):
         return self.first_name + ' ' + self.last_name

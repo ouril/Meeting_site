@@ -5,7 +5,11 @@ from django.shortcuts import (
     HttpResponseRedirect
 )
 
-from .forms import RegForm
+from .forms import (
+    RegForm,
+    AccountForm,
+    FindForm
+)
 
 
 def login(request):
@@ -13,8 +17,8 @@ def login(request):
         username = request.POST.get('login')
         password = request.POST.get('password')
         user = auth.authenticate(
-            username = username,
-            password = password
+            username=username,
+            password=password
             )
         if user is not None:
             auth.login(request, user)
@@ -33,9 +37,22 @@ def logout(request):
 def registration(request):
     if request.method == 'POST':
         form = RegForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/account')
+        return render(request, 'registration.html', {'form': form})
+    return render(request, 'registration.html', {'form': RegForm()})
 
+
+def make_account(request):
+    if request.method == 'POST':
+        form = AccauntForm(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/')
-        return render(request, 'registration.html', {'form': form})
-    return render(request, 'registration.html', {'form': RegForm()})
+        return render(request, 'make_account.html', {'form': form})
+    return render(request, 'make_account.html', {'form': AccountForm()})
+
+
+def find_somebody(request):
+    return render(request, 'index.html', {'form': FindForm()})
