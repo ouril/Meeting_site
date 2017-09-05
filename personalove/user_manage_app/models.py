@@ -4,8 +4,6 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
-from django.conf import settings
-
 
 def make_upload_path(instance, filename, prefix=False):
     """Create unqiue name for Image
